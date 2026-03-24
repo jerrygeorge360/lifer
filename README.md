@@ -38,6 +38,62 @@ In a separate terminal, start the background workers:
 npm run workers
 ```
 
+## System Architecture
+
+```mermaid
+graph TD
+    subgraph Client ["Client (PWA)"]
+        UI[Next.js UI]
+        WC[Web Crypto API]
+        WA[WebAuthn / Passkeys]
+    end
+
+    subgraph Backend ["Backend (Next.js API)"]
+        API[API Routes]
+        ORM[Prisma ORM]
+        BMQ[BullMQ Workers]
+    end
+
+    subgraph Infrastructure
+        DB[(PostgreSQL)]
+        RD[(Redis)]
+    end
+
+    subgraph External ["External Services"]
+        IPFS[Pinata / IPFS]
+        EM[Resend / Email]
+        TG[Telegram Bot]
+    end
+
+    subgraph Monitoring ["Social Monitoring"]
+        NO[Nostr Relays]
+        MA[Mastodon Webhooks]
+        BS[Bluesky Polling]
+    end
+
+    %% Flow: Post detection
+    NO --> BMQ
+    MA --> API
+    BS --> BMQ
+    
+    %% Flow: Check-in
+    API --> UI
+    UI -- "Sign" --> WC
+    WC -- "Auth" --> WA
+    UI -- "Signed Attestation" --> API
+    API -- "Upload" --> IPFS
+    
+    %% Flow: Alerting
+    BMQ -- "Threshold Check" --> DB
+    BMQ -- "Fire Alert" --> EM
+    BMQ -- "Fire Alert" --> TG
+    
+    %% Connections
+    API --> ORM
+    ORM --> DB
+    BMQ --> RD
+```
+
 ## Technical Stack
 - **Frontend:** Next.js 14, Tailwind CSS (Glassmorphism), Shadcn UI.
 - **Backend:** Next.js API Routes, Prisma ORM, PostgreSQL.
