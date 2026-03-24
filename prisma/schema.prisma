@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum CanaryStatus {
+  active
+  alerted
+  snoozed
+}
+
+enum Platform {
+  nostr
+  mastodon
+  bluesky
+}
+
+enum AlertReason {
+  silence
+  device_locked
+  distress
+}
+
+model User {
+  id                    String    @id @default(cuid())
+  email                 String    @unique
+  username              String    @unique
+  passwordHash          String
+  realPinHash           String?
+  duressPinHash         String?
+  publicKey             String
+  distressKey           String
+  did                   String
+  webAuthnCredentialId  String?
+  webAuthnPublicKey     Bytes?
+  webAuthnCounter       Int       @default(0)
+  webAuthnChallenge     String?
+  createdAt             DateTime  @default(now())
+  canary                Canary?
+  sessions              Session[]
+}
+
+model Canary {
+  id            String          @id @default(cuid())
+  username      String          @unique
+  userId        String          @unique
+  user          User            @relation(fields: [userId], references: [id])
+  thresholdDays Int
+  snoozedUntil  DateTime?
+  lastSeenAt    DateTime?
+  status        CanaryStatus    @default(active)
+  accounts      SocialAccount[]
+  subscribers   Subscriber[]
+  pushSubscriptions PushSubscription[]
+  attestations  Attestation[]
+  alerts        Alert[]
+  pendingCheckins PendingCheckin[]
+}
+
+model SocialAccount {
+  id         String   @id @default(cuid())
+  canaryId   String
+  canary     Canary   @relation(fields: [canaryId], references: [id])
+  platform   Platform
+  handle     String
+  platformId String
+
+  @@unique([canaryId, platform])
+}
+
+model Subscriber {
+  id         String   @id @default(cuid())
+  canaryId   String
+  canary     Canary   @relation(fields: [canaryId], references: [id])
+  email      String?
+  telegramId String?
+  createdAt  DateTime @default(now())
+}
+
+model Attestation {
+  id         String    @id @default(cuid())
+  canaryId   String
+  canary     Canary    @relation(fields: [canaryId], references: [id])
+  ipfsCid    String
+  payload    Json
+  signature  String
+  timestamp  DateTime
+  isDistress Boolean   @default(false)
+}
+
+model Alert {
+  id       String      @id @default(cuid())
+  canaryId String
+  canary   Canary      @relation(fields: [canaryId], references: [id])
+  reason   AlertReason
+  firedAt  DateTime    @default(now())
+  notified Int         @default(0)
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model PendingCheckin {
+  id         String   @id @default(cuid())
+  canaryId   String
+  canary     Canary   @relation(fields: [canaryId], references: [id])
+  platform   Platform
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  canaryId  String
+  canary    Canary   @relation(fields: [canaryId], references: [id])
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+}
