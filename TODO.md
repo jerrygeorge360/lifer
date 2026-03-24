@@ -5,7 +5,7 @@ This document outlines the remaining tasks for completing the Lifer decentralize
 ## Infrastructure & Core Setup
 - [x] **Local Environment:** Database (PostgreSQL) and Redis are running (see `docker-compose.yml`).
 - [x] **Database Schema:** Initial Prisma migrations are applied.
-- [ ] **Secrets Audit:** Ensure all sensitive tokens in `.env.local` are valid and not committed.
+- [x] **Secrets Audit:** Ensure all sensitive tokens in `.env.local` are valid and not committed.
 
 ## Security & Cryptography
 - [ ] **Dual-Key Validation:** Verify client-side generation and signing with both the **Main Keypair** and **Distress Keypair**.
@@ -20,8 +20,8 @@ This document outlines the remaining tasks for completing the Lifer decentralize
 
 ## Alerting & Fanout
 - [ ] **Channel Verification:**
-    - [ ] Real-world test of **Resend** email alerts.
-    - [ ] Real-world test of **Telegram Bot** alert delivery to actual Telegram IDs.
+    - [ ] Real-world test of **Resend** email alerts.(Please use resend.com it is easy to setup and use and free)
+    - [ ] Real-world test of **Telegram Bot** alert delivery to actual Telegram IDs.(Ask me for my telegram token)
 - [ ] **Silence Threshold Logic:** Manually simulate a user going silent beyond their threshold and verify the automatic alert firing.
 - [ ] **Snooze Logic:** Ensure `snoozeUntil` works and is cryptographically signed to prevent unauthorized suppression of alerts.
 
@@ -30,7 +30,8 @@ This document outlines the remaining tasks for completing the Lifer decentralize
 - [ ] **Interactive 3D Elements:** Add the Three.js status globe or pulse animations for safe/alert states.
 - [ ] **PWA Manifest:** Verify `manifest.json` and service worker (`sw.js`) for full "installability".
 
-## Testing & Readiness
+## Testing & Readiness(later I will do that)
 - [ ] **API Functional Tests:** Create unit/integration tests for critical routes in `app/api/`.
 - [ ] **Demo Mode:** Create a set of scripts to easily simulate "Social Post", "Check-in", and "Silence Alert" for demo purposes.
 - [ ] **Deployment Prep:** Finalize the runbook for deploying to Vercel (Frontend) and Railway (Backend/Workers).
+I will likely use github action to deploy to a azure

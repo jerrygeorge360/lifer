@@ -16,9 +16,9 @@ cp .env.example .env.local
 ```
 
 ### 3. Spin up infrastructure
-Start the PostgreSQL database:
+Start the PostgreSQL and Redis services (this script checks for existing host services and only spins up Docker containers if needed):
 ```bash
-docker-compose up -d
+npm run infra
 ```
 
 ### 4. Install dependencies & Migrate

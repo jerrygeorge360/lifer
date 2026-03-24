@@ -9,6 +9,7 @@
     "lint": "next lint",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
+    "infra": "node --import tsx scripts/infra.ts",
     "workers": "node --import tsx scripts/workers.ts"
   },
   "dependencies": {
