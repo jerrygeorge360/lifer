@@ -1,3 +1,8 @@
+self.addEventListener("fetch", (event) => {
+  // Basic fetch handler to satisfy PWA install criteria
+  event.respondWith(fetch(event.request));
+});
+
 self.addEventListener("push", (event) => {
   const payload = event.data ? event.data.json() : { title: "Lifer", body: "New alert" };
   event.waitUntil(

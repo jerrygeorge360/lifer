@@ -16,27 +16,27 @@ cp .env.example .env.local
 ```
 
 ### 3. Spin up infrastructure
-Start the PostgreSQL and Redis services (this script checks for existing host services and only spins up Docker containers if needed):
+Launch the full Lifer stack (Web Server, Workers, Database, and Redis) with a single command:
 ```bash
 npm run infra
 ```
+*Note: This script intelligently avoids port conflicts if you already have Postgres or Redis running on your host.*
 
-### 4. Install dependencies & Migrate
-```bash
-npm install
-npx prisma migrate dev
-npx prisma generate
-```
+### 4. External Database (e.g., Neon)
+To use a cloud database instead of the local Docker one:
+1. Update `DATABASE_URL` in `.env.local` with your connection string.
+2. Run the migration to set up the schema:
+   ```bash
+   npx prisma migrate deploy
+   ```
+3. Run `npm run infra` as usual; it will automatically detect the external URL.
 
-### 5. Run the application
-Start the development server:
-```bash
-npm run dev
-```
-In a separate terminal, start the background workers:
-```bash
-npm run workers
-```
+### 5. Running for Development
+If you prefer to run the components locally while keeping just the DB in Docker:
+1. **Infrastructure**: `npm run infra` (starts only missing services).
+2. **Web Server**: `npm run dev` in one terminal.
+3. **Workers**: `npm run workers` in a second terminal.
+4. **Data Browser**: `npx prisma studio` in a third terminal.
 
 ## System Architecture
 

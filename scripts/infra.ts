@@ -18,27 +18,32 @@ async function isPortAvailable(port: number): Promise<boolean> {
 async function main() {
   const postgresAvailable = await isPortAvailable(5432);
   const redisAvailable = await isPortAvailable(6379);
+  const webAvailable = await isPortAvailable(3000);
 
-  if (postgresAvailable && redisAvailable) {
-    console.log("Starting all services via Docker...");
+  const startFull = process.argv.includes("--full") || (postgresAvailable && redisAvailable && webAvailable);
+
+  if (startFull) {
+    console.log("🚀 Starting Full Lifer Stack via Docker (Web + Workers + DB + Redis)...");
     execSync("docker compose up -d", { stdio: "inherit" });
-  } else if (!postgresAvailable && !redisAvailable) {
-    console.log("Both PostgreSQL (5432) and Redis (6379) are already running on the host.");
-    console.log("Skipping Docker infrastructure setup.");
+    console.log("\n✅ Done. Visit http://localhost:3000");
   } else {
+    console.log("🛠️ Starting Infrastructure only (DB + Redis)...");
+    
     if (postgresAvailable) {
       console.log("Starting PostgreSQL via Docker...");
       execSync("docker compose up -d db", { stdio: "inherit" });
     } else {
-      console.log("PostgreSQL is already running on the host (5432). Skipping Docker DB.");
+      console.log("PostgreSQL is already running on the host (5432).");
     }
 
     if (redisAvailable) {
       console.log("Starting Redis via Docker...");
       execSync("docker compose up -d redis", { stdio: "inherit" });
     } else {
-      console.log("Redis is already running on the host (6379). Skipping Docker Redis.");
+      console.log("Redis is already running on the host (6379).");
     }
+    
+    console.log("\n✅ Infrastructure ready. Run 'npm run dev' and 'npm run workers' locally.");
   }
 }
 

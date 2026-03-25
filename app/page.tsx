@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TiltCard } from "@/components/ui";
+import { TiltCard, GlassCard } from "@/components/ui";
 
 const features = [
   {
@@ -99,7 +99,7 @@ export default function Home() {
 
         {/* Threat Models */}
         <div className="mt-40">
-          <div className="glass-card fade-in-up p-8 md:p-16">
+          <GlassCard className="fade-in-up p-8 md:p-16">
             <h2 className="heading-serif mb-12 text-4xl text-white md:text-5xl">
               Built for Threat Models
             </h2>
@@ -122,12 +122,12 @@ export default function Home() {
                 </div>
               ))}
             </div>
-          </div>
+          </GlassCard>
         </div>
 
         {/* Trust Signals */}
         <div className="mt-40 text-center">
-          <div className="glass-card fade-in-up mx-auto max-w-3xl p-12">
+          <GlassCard className="fade-in-up mx-auto max-w-3xl p-12">
             <h3 className="heading-serif mb-6 text-3xl text-white">
               Zero Trust. Zero Compromise.
             </h3>
@@ -151,7 +151,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-          </div>
+          </GlassCard>
         </div>
 
         {/* Footer */}

@@ -28,6 +28,21 @@ body {
   font-family: 'DM Mono', monospace;
   letter-spacing: 0.02em;
   background-attachment: fixed;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 1000;
+  filter: contrast(120%) brightness(120%);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -207,6 +222,18 @@ body {
   background: #00e07d;
   border-color: #00e07d;
   box-shadow: 0 0 24px rgba(0, 255, 140, 0.3);
+}
+
+.glass-button-alert {
+  background: var(--alert-red);
+  color: #fff;
+  border-color: var(--alert-red);
+}
+
+.glass-button-alert:hover {
+  background: #d32f2f;
+  border-color: #d32f2f;
+  box-shadow: 0 0 24px rgba(192, 57, 43, 0.4);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

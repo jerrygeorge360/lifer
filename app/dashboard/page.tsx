@@ -118,7 +118,9 @@ export default function DashboardPage() {
         throw new Error("Notification permission denied.");
       }
 
-      const registration = await navigator.serviceWorker.register("/sw.js");
+      // Registration is now handled globally in layout.tsx.
+      // We just need the reference here.
+      const registration = await navigator.serviceWorker.ready;
       const existing = await registration.pushManager.getSubscription();
       const subscription =
         existing ??
@@ -261,11 +263,7 @@ export default function DashboardPage() {
           <button
             disabled={busy !== null}
             onClick={() => createCheckin(true)}
-            style={{
-              background: "var(--alert-red)",
-              border: "1px solid var(--alert-red)",
-            }}
-            className="w-full rounded-lg px-4 py-3 font-semibold text-white transition-all hover:brightness-110 disabled:opacity-70"
+            className="glass-button-alert w-full"
           >
             {busy === "distress" ? "Firing distress signal..." : "Send Silent Distress Signal"}
           </button>

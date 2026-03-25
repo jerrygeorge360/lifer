@@ -25,10 +25,10 @@ This document outlines the remaining tasks for completing the Lifer decentralize
 - [ ] **Silence Threshold Logic:** Manually simulate a user going silent beyond their threshold and verify the automatic alert firing.
 - [ ] **Snooze Logic:** Ensure `snoozeUntil` works and is cryptographically signed to prevent unauthorized suppression of alerts.
 
-## UI/UX & PWA
-- [ ] **Glassmorphic Design Polish:** Ensure all screens match the "Dark Glass Luxury" aesthetic defined in `copilot-instructions.md`.
-- [ ] **Interactive 3D Elements:** Add the Three.js status globe or pulse animations for safe/alert states.
-- [ ] **PWA Manifest:** Verify `manifest.json` and service worker (`sw.js`) for full "installability".
+## UI/UX & PWA(go here:https://whatpwacando.today/)
+- [x] **Glassmorphic Design Polish:** Ensure all screens match the "Dark Glass Luxury" aesthetic defined in `copilot-instructions.md`.
+- [x] **Interactive 3D Elements:** Add the Three.js status globe or pulse animations for safe/alert states.
+- [x] **PWA Manifest:** Verify `manifest.json` and service worker (`sw.js`) for full "installability".
 
 ## Testing & Readiness(later I will do that)
 - [ ] **API Functional Tests:** Create unit/integration tests for critical routes in `app/api/`.
