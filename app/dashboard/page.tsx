@@ -24,6 +24,19 @@ function formatRelative(dateIso: string | null): string {
   return `${Math.floor(hours / 24)}d ago`;
 }
 
+function urlBase64ToUint8Array(base64String: string) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
 export default function DashboardPage() {
   const [session, setSession] = useState<SessionPayload | null>(null);
   const [registration, setRegistration] = useState<RegistrationState | null>(null);
@@ -126,7 +139,7 @@ export default function DashboardPage() {
         existing ??
         (await registration.pushManager.subscribe({
           userVisibleOnly: true,
-          applicationServerKey: Uint8Array.from(atob(vapidKey), (char) => char.charCodeAt(0)),
+          applicationServerKey: urlBase64ToUint8Array(vapidKey),
         }));
 
       await postJson("/api/push/subscribe", subscription.toJSON());
@@ -184,55 +197,40 @@ export default function DashboardPage() {
         </Link>
       </div>
 
-      {/* Status Orb */}
-      <div className="mt-12 grid gap-8 lg:grid-cols-2">
-        <GlassCard className="fade-in-up-2 p-8" status={statusMode}>
-          <div className="text-center">
-            <p className="mono-caps mb-6 text-xs" style={{ color: "var(--text-muted)" }}>
-              Canary Status
-            </p>
-            <StatusOrb status={statusMode} />
-            <p 
-              className="mono-caps mt-6 text-2xl font-semibold"
-              style={{ color: statusMode === "safe" ? "var(--safe-green)" : "var(--alert-red)" }}
-            >
-              {statusMode === "safe" ? "LIFER ACTIVE" : "ALERT FIRED"}
-            </p>
-            <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
-              Last verified: {formatRelative(canary.lastSeenAt)}
-            </p>
-          </div>
+      {/* Hero Status Area */}
+      <div className="mt-12 flex flex-col items-center">
+        <GlassCard className="fade-in-up-2 w-full max-w-2xl p-10 text-center" status={statusMode}>
+          <p className="mono-caps mb-8 text-xs font-medium tracking-[0.3em]" style={{ color: "var(--text-muted)" }}>
+            Cryptographic Safety Heartbeat
+          </p>
+          <p 
+            className="mono-caps mt-8 text-3xl font-bold tracking-[0.25em]"
+            style={{ color: statusMode === "safe" ? "var(--safe-green)" : "var(--alert-red)" }}
+          >
+            {statusMode === "safe" ? "SYSTEM: SAFE" : "SYSTEM: ALERT"}
+          </p>
+          <p className="mt-4 text-sm font-medium" style={{ color: "var(--text-muted)" }}>
+            Last verified: {formatRelative(canary.lastSeenAt)}
+          </p>
+        </GlassCard>
+      </div>
+
+      {/* Stats Bar */}
+      <div className="mt-8 grid gap-4 grid-cols-1 md:grid-cols-3">
+        <GlassCard className="fade-in-up-3 p-6 flex flex-col items-center text-center">
+          <p className="mono-caps text-[10px] pb-1" style={{ color: "var(--text-muted)" }}>Operative</p>
+          <p className="text-xl font-semibold text-white truncate w-full">@{session.user.username}</p>
         </GlassCard>
 
-        {/* Stats Grid */}
-        <div className="space-y-4">
-          <GlassCard className="fade-in-up-3 p-6">
-            <p className="mono-caps text-xs" style={{ color: "var(--text-muted)" }}>
-              Operative
-            </p>
-            <p className="mt-2 text-2xl font-semibold text-white">
-              @{session.user.username}
-            </p>
-          </GlassCard>
+        <GlassCard className="fade-in-up-4 p-6 flex flex-col items-center text-center">
+          <p className="mono-caps text-[10px] pb-1" style={{ color: "var(--text-muted)" }}>Threshold</p>
+          <p className="text-xl font-semibold text-white">{canary.thresholdDays} Days</p>
+        </GlassCard>
 
-          <GlassCard className="fade-in-up-4 p-6">
-            <p className="mono-caps text-xs" style={{ color: "var(--text-muted)" }}>
-              Threshold
-            </p>
-            <p className="mt-2 text-2xl font-semibold text-white">
-              {canary.thresholdDays}d silence triggers alert
-            </p>
-          </GlassCard>
-
-          <GlassCard className="fade-in-up-5 p-6">
-            <p className="mono-caps text-xs" style={{ color: "var(--text-muted)" }}>
-              Attestations
-            </p>
-            <p className="mt-2 text-2xl font-semibold text-white">
-              {canary.attestations?.length ?? 0} signed
-            </p>
-          </GlassCard>
-        </div>
+        <GlassCard className="fade-in-up-5 p-6 flex flex-col items-center text-center">
+          <p className="mono-caps text-[10px] pb-1" style={{ color: "var(--text-muted)" }}>Evidence</p>
+          <p className="text-xl font-semibold text-white">{canary.attestations?.length ?? 0} Signed</p>
+        </GlassCard>
       </div>
 
       {/* Check-in Actions */}
@@ -284,9 +282,9 @@ export default function DashboardPage() {
             onChange={(event) => setSelectedPlatform(event.target.value as "nostr" | "mastodon" | "bluesky")}
             className="glass-input"
           >
-            <option value="nostr">Nostr</option>
-            <option value="mastodon">Mastodon</option>
-            <option value="bluesky">Bluesky</option>
+            <option value="nostr">Nostr (Live)</option>
+            <option value="mastodon" disabled>Mastodon (Coming Soon)</option>
+            <option value="bluesky" disabled>Bluesky (Coming Soon)</option>
           </select>
           <button
             onClick={simulatePostDetected}

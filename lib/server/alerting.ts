@@ -58,10 +58,19 @@ export async function checkSilenceThresholds(): Promise<number> {
   const canaries = await prisma.canary.findMany({ where: { status: CanaryStatus.active } });
   let fired = 0;
 
+  // For testing purposes, we can treat thresholdDays as thresholdMinutes.
+  const isTestMode = process.env.TEST_MODE === "true";
+
   for (const canary of canaries) {
     if (!canary.lastSeenAt) continue;
-    const hoursSilent = (Date.now() - canary.lastSeenAt.getTime()) / 1000 / 60 / 60;
-    if (hoursSilent >= canary.thresholdDays * 24) {
+
+    const msSilent = Date.now() - canary.lastSeenAt.getTime();
+    const minutesSilent = msSilent / 1000 / 60;
+    const hoursSilent = minutesSilent / 60;
+
+    const limitInHours = isTestMode ? canary.thresholdDays / 60 : canary.thresholdDays * 24;
+
+    if (hoursSilent >= limitInHours) {
       await fireAlert(canary.id, AlertReason.silence);
       fired += 1;
     }

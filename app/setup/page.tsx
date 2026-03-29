@@ -227,12 +227,13 @@ export default function SetupPage() {
 
             <div className="space-y-2">
               <label className="mono-caps block text-xs text-white">
-                Mastodon Handle
+                Mastodon Handle (Coming Soon)
               </label>
               <input
                 value={mastodon}
+                disabled
                 onChange={(event) => setMastodon(event.target.value.trim())}
-                className="glass-input w-full"
+                className="glass-input w-full opacity-50 cursor-not-allowed"
                 placeholder="@user@instance.social"
               />
               <p className="text-xs" style={{ color: "var(--text-muted)" }}>
@@ -242,12 +243,13 @@ export default function SetupPage() {
 
             <div className="space-y-2">
               <label className="mono-caps block text-xs text-white">
-                Bluesky Handle
+                Bluesky Handle (Coming Soon)
               </label>
               <input
                 value={bluesky}
+                disabled
                 onChange={(event) => setBluesky(event.target.value.trim())}
-                className="glass-input w-full"
+                className="glass-input w-full opacity-50 cursor-not-allowed"
                 placeholder="user.bsky.social"
               />
               <p className="text-xs" style={{ color: "var(--text-muted)" }}>

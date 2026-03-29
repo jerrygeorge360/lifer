@@ -125,14 +125,16 @@ export function StatusOrb({ status, className = "" }: StatusOrbProps) {
       mainGroup.rotation.y += (mouseRef.current.x * 0.2 - mainGroup.rotation.y) * 0.05;
       mainGroup.rotation.x += (mouseRef.current.y * -0.2 - mainGroup.rotation.x) * 0.05;
 
-      // Core pulsing
+      // Core spinning & pulsing
+      core.rotation.y += 0.005;
+      core.rotation.x += 0.002;
       const pulse = 1 + Math.sin(timeRef.current * 1.5) * 0.05;
       core.scale.set(pulse, pulse, pulse);
       material.emissiveIntensity = 0.5 + Math.sin(timeRef.current * 2) * 0.3;
 
-      // Shell rotation
-      shell.rotation.y += 0.003;
-      shell.rotation.z += 0.001;
+      // Shell rotation (opposite direction for depth)
+      shell.rotation.y -= 0.003;
+      shell.rotation.z += 0.002;
 
       // Particles drift
       particles.rotation.y += 0.0005;

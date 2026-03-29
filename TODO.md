@@ -14,9 +14,12 @@ This document outlines the remaining tasks for completing the Lifer decentralize
 - [ ] **IPFS Persistence:** Verify that attestations are being correctly pinned to Pinata and are publicly accessible via CID.
 
 ## Social Monitoring & Check-ins
-- [ ] **Nostr Relay Integration:** Test the instant detection of posts via `wss://relay.damus.io` (or other configured relays).
-- [ ] **Bluesky/Mastodon Polling:** Ensure the BullMQ workers properly poll these platforms and trigger the "Two-Layer" check-in push notification.
+- [x] **Nostr Relay Integration:** Real-time detection via `nos.lol`, `damus.io`, etc.
 - [ ] **Push Notification Logic:** Confirm that the browser receives and displays check-in prompts correctly via Web Push.
+
+## Future Roadmap (Coming Soon)
+- [ ] **Bluesky Polling:** Implement BullMQ workers to poll Bluesky posts.
+- [ ] **Mastodon Webhooks:** Implement activity detection for Mastodon accounts.
 
 ## Alerting & Fanout
 - [ ] **Channel Verification:**
